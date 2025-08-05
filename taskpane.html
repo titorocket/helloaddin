@@ -1,13 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Hello Word Add-in</title>
-  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-  <script src="taskpane.js"></script>
+    <title>Panel de Tareas</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 15px; }
+        h1 { font-size: 18px; }
+        p { font-size: 14px; }
+        button {
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover { background-color: #005A9E; }
+    </style>
 </head>
-<body>
-  <h2>Mi primer complemento</h2>
-  <button onclick="insertText()">Insertar Hello Word</button>
+<body style="display: flex; flex-direction: column; justify-content: center; height: 100vh;">
+    <h1>¡Hola, Mundo!</h1>
+    <p>Haz clic en el botón para insertar el texto en tu documento de Word.</p>
+    <button id="insertButton">Insertar "Hello World"</button>
+
+    <script>
+        Office.onReady(info => {
+            if (info.host === Office.HostType.Word) {
+                document.getElementById("insertButton").onclick = insertText;
+            }
+        });
+
+        function insertText() {
+            Word.run(async (context) => {
+                const docBody = context.document.body;
+                docBody.insertText('Hello World', 'End');
+                await context.sync();
+            }).catch(error => {
+                console.log("Error: " + error);
+            });
+        }
+    </script>
 </body>
 </html>
